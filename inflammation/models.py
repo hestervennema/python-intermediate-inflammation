@@ -10,7 +10,7 @@ and each column represents a single day across all patients.
 import numpy as np
 
 
-def load_csv(filename):
+def load_csv(filename):  
     """Load a Numpy array from a CSV
 
     :param filename: Filename of CSV to load
@@ -37,35 +37,20 @@ def load_json(filename):
         data_as_json = json.load(file)
         return [np.array(entry['observations']) for entry in data_as_json]
 
-def daily_mean(data):
-    """Calculate the daily mean of a 2D inflammation data array.
 
-    :param data: A 2D array with inflammation data
-                (each row contains measurements of a single patient across all days).
-    :returns: An array of mean values of measurements for each day.
-    """
+def daily_mean(data):
+    """Calculate the daily mean of a 2d inflammation data array."""
     return np.mean(data, axis=0)
 
 
 def daily_max(data):
-    """Calculate the daily max of a 2D inflammation data array.
-
-    :param data: A 2D array with inflammation data
-                (each row contains measurements of a single patient across all days).
-    :returns: An array of max values of measurements for each day.
-    """
+    """Calculate the daily max of a 2d inflammation data array."""
     return np.max(data, axis=0)
 
 
 def daily_min(data):
-    """Calculate the daily min of a 2D inflammation data array.
-
-    :param data: A 2D array with inflammation data
-                (each row contains measurements of a single patient across all days).
-    :returns: An array of minimum values of measurements for each day.
-    """
+    """Calculate the daily min of a 2d inflammation data array."""
     return np.min(data, axis=0)
-
 
 def patient_normalise(data):
     """
@@ -85,3 +70,9 @@ def patient_normalise(data):
     normalised[np.isnan(normalised)] = 0
     normalised[normalised < 0] = 0
     return normalised
+
+def standard_deviation(data):
+    """Computes and returns standard deviation for data."""
+    std_data = np.std(data, axis=0)
+
+    return std_data
