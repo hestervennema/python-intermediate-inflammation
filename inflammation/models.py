@@ -17,6 +17,26 @@ def load_csv(filename):
     """
     return np.loadtxt(fname=filename, delimiter=',')
 
+def load_json(filename):
+    """Load a numpy array from a JSON document.
+
+    Expected format:
+    [
+        {
+            observations: [0, 1]
+        },
+        {
+            observations: [0, 2]
+        }
+    ]
+
+    :param filename: Filename of CSV to load
+
+    """
+    with open(filename, 'r', encoding='utf-8') as file:
+        data_as_json = json.load(file)
+        return [np.array(entry['observations']) for entry in data_as_json]
+
 
 def daily_mean(data):
     """Calculate the daily mean of a 2d inflammation data array."""
@@ -32,6 +52,24 @@ def daily_min(data):
     """Calculate the daily min of a 2d inflammation data array."""
     return np.min(data, axis=0)
 
+def patient_normalise(data):
+    """
+    Normalise patient data from a 2D inflammation data array.
+
+    NaN values are ignored, and normalised to 0.
+
+    Negative values are rounded to 0.
+    """
+    data_max = np.nanmax(data, axis=1)
+
+    if np.any(data < 0):
+        raise ValueError('Inflammation values should not be negative')
+
+    with np.errstate(invalid='ignore', divide='ignore'):
+        normalised = data / data_max[:, np.newaxis]
+    normalised[np.isnan(normalised)] = 0
+    normalised[normalised < 0] = 0
+    return normalised
 
 def standard_deviation(data):
     """Computes and returns standard deviation for data."""
